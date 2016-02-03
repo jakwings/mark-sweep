@@ -153,7 +153,6 @@ void gc_sweep(VM *vm) {
 }
 
 void gc(VM *vm) {
-    if (vm->object_num == 0) return;
 #ifndef NDEBUG
     size_t object_num = vm->object_num;
 #endif
