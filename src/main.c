@@ -223,7 +223,7 @@ void test4(void) {
 void perf_test(void) {
     puts("Performance Test");
     VM *vm = new_vm();
-    for (size_t i = 0; i < 1000; ++i) {
+    for (size_t i = 0; i < 100000; ++i) {
         size_t round = rand() % STACK_MAX + 1;
         for (size_t j = 0; j < round; ++j) {
             vm_push_int(vm, i + j);
@@ -240,10 +240,12 @@ int main(void) {
     srand(seed);
     printf("Testing with a random seed: %zu\n\n", seed);
 
+#ifndef NDEBUG
     test1();
     test2();
     test3();
     test4();
+#endif
     perf_test();
 
     printf("\nTested with a random seed: %zu\n", seed);

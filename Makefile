@@ -2,6 +2,10 @@ BIN = main
 SRC = src/*.c
 CFLAGS = -Wall -Wextra -Werror -O2
 
+ifeq ($(NDEBUG), 1)
+  CFLAGS += -DNDEBUG
+endif
+
 .PHONY: clean
 
 $(BIN): $(SRC)
