@@ -220,8 +220,8 @@ void test4(void) {
     free_vm(vm);
 }
 
-void perf_test(void) {
-    puts("Performance Test");
+void perf_test1(void) {
+    puts("Performance Test 1");
     VM *vm = new_vm();
     for (size_t i = 0; i < 100000; ++i) {
         size_t round = rand() % STACK_MAX + 1;
@@ -229,6 +229,26 @@ void perf_test(void) {
             vm_push_int(vm, i + j);
         }
         for (size_t j = 0; j < round; ++j) {
+            vm_pop(vm);
+        }
+    }
+    free_vm(vm);
+}
+
+void perf_test2(void) {
+    puts("Performance Test 2");
+    VM *vm = new_vm();
+    for (size_t i = 0; i < 100000; ++i) {
+        size_t round = rand() % STACK_MAX + 1;
+        size_t popped = 0;
+        for (size_t j = 0; j < round; ++j) {
+            vm_push_int(vm, i + j);
+            if (j % 2 == 1) {
+                vm_push_pair(vm);
+                ++popped;
+            }
+        }
+        for (size_t j = 0; j < round - popped; ++j) {
             vm_pop(vm);
         }
     }
@@ -246,7 +266,8 @@ int main(void) {
     test3();
     test4();
 #endif
-    perf_test();
+    perf_test1();
+    perf_test2();
 
     printf("\nTested with a random seed: %zu\n", seed);
     return EXIT_SUCCESS;
