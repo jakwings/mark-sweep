@@ -255,10 +255,10 @@ void perf_test2(void) {
     free_vm(vm);
 }
 
-int main(void) {
-    time_t seed = time(0);
+int main(int argc, char* *argv/* , char* *envp */) {
+    unsigned seed = argc > 1 ? atoi(argv[1]) : time(0);
     srand(seed);
-    printf("Testing with a random seed: %zu\n\n", seed);
+    printf("Testing with a random seed: %u\n\n", seed);
 
 #ifndef NDEBUG
     test1();
@@ -269,6 +269,6 @@ int main(void) {
     perf_test1();
     perf_test2();
 
-    printf("\nTested with a random seed: %zu\n", seed);
+    printf("\nTested with a random seed: %u\n", seed);
     return EXIT_SUCCESS;
 }
