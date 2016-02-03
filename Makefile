@@ -1,13 +1,14 @@
-BIN=markandsweep
+BIN = main
+SRC = src/*.c
+CFLAGS = -Wall -Wextra -Werror -O2
 
-.PHONY : clean 
+.PHONY: clean
 
-$(BIN) : main.c
-	$(CC)  -ggdb -std=gnu99  main.c -o $(BIN)
+$(BIN): $(SRC)
+	$(CC) -std=c99 $(CFLAGS) $< -o $(BIN)
 
-clean :
-	rm -f $(BIN) *~
+clean:
+	rm -f $(BIN)
 
-run : $(BIN)
-	valgrind  --leak-check=yes ./$(BIN)
-
+test: $(BIN)
+	valgrind --leak-check=yes ./$(BIN)
