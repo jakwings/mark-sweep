@@ -1,5 +1,5 @@
 /*
-** A simple garbage collector.
+** A simple (not copy-on-write friendly) garbage collector.
 **
 ** Thanks to:
 ** http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
@@ -87,7 +87,7 @@ Object* new_object(VM *vm, ObjectType type) {
         obj->mark = 0;
         obj->type = type;
         obj->next = vm->first_object;
-        vm->first_object = obj;
+        vm->first_object = obj;  // tri-color: gray objects
         ++vm->object_num;
     }
     return obj;
@@ -123,7 +123,7 @@ void free_vm(VM *vm) {
  */
 void gc_mark(Object *obj) {
     if (obj->mark) return;  // for recursive reference
-    obj->mark = 1;
+    obj->mark = 1;  // tri-color: black objects
     if (obj->type == OBJECT_TYPE_PAIR) {
         gc_mark(obj->head);
         gc_mark(obj->tail);
@@ -140,7 +140,7 @@ void gc_sweep(VM *vm) {
     Object* *obj = &(vm->first_object);
     while (*obj) {
         if (!(*obj)->mark) {
-            Object *unreached = *obj;
+            Object *unreached = *obj;  // tri-color: white objects
             // first_object / previous->next = unreached->next
             *obj = unreached->next;
             free(unreached);
